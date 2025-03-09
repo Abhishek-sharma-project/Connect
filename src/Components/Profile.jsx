@@ -9,15 +9,38 @@ const Profile = () => {
   });
 
   const [editMode, setEditMode] = useState(false);
-  const [formData, setFormData] = useState({ name: user.name, bio: user.bio });
+  const [formData, setFormData] = useState({
+    name: user.name,
+    bio: user.bio,
+    skills: user.skills,
+  });
+
+  const [newSkill, setNewSkill] = useState("");
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleSave = () => {
-    setUser({ ...user, name: formData.name, bio: formData.bio });
+    setUser({
+      ...user,
+      name: formData.name,
+      bio: formData.bio,
+      skills: formData.skills,
+    });
     setEditMode(false);
+  };
+
+  const handleAddSkill = () => {
+    if (newSkill.trim() !== "") {
+      setFormData({ ...formData, skills: [...formData.skills, newSkill] });
+      setNewSkill("");
+    }
+  };
+
+  const handleRemoveSkill = (index) => {
+    const updatedSkills = formData.skills.filter((_, i) => i !== index);
+    setFormData({ ...formData, skills: updatedSkills });
   };
 
   return (
@@ -43,6 +66,45 @@ const Profile = () => {
             onChange={handleChange}
             className="w-full p-2 border rounded dark:bg-gray-700 dark:text-white"
           />
+
+          <div className="mt-3">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+              Skills
+            </h3>
+            <div className="flex gap-2 mt-2">
+              <input
+                type="text"
+                value={newSkill}
+                onChange={(e) => setNewSkill(e.target.value)}
+                className="w-full p-2 border rounded dark:bg-gray-700 dark:text-white"
+                placeholder="Add a skill"
+              />
+              <button
+                onClick={handleAddSkill}
+                className="px-3 py-2 bg-blue-600 text-white rounded"
+              >
+                Add
+              </button>
+            </div>
+
+            <ul className="mt-3 space-y-1">
+              {formData.skills.map((skill, index) => (
+                <li
+                  key={index}
+                  className="flex justify-between items-center bg-gray-200 dark:bg-gray-700 px-3 py-1 rounded-full text-sm"
+                >
+                  {skill}
+                  <button
+                    onClick={() => handleRemoveSkill(index)}
+                    className="text-red-500 hover:text-red-700"
+                  >
+                    ✕
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+
           <button
             onClick={handleSave}
             className="mt-2 px-4 py-2 bg-blue-600 text-white rounded"
@@ -57,7 +119,7 @@ const Profile = () => {
           </h2>
           <p className="text-gray-600 dark:text-gray-300">{user.bio}</p>
 
-          <ul className="mt-3 flex justify-center gap-2">
+          <ul className="mt-3 flex flex-wrap justify-center gap-2">
             {user.skills.map((skill, index) => (
               <li
                 key={index}

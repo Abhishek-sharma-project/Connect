@@ -4,7 +4,7 @@ const Profile = () => {
   const [user, setUser] = useState({
     name: "Abhishek Sharma",
     bio: "Web Developer",
-    skills: ["React", "JavaScript", "Tailwind CSS"],
+    skills: ["React", "JavaScript"],
     image: "image.jpg",
   });
 
